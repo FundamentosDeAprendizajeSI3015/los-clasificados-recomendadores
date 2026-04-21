@@ -216,7 +216,7 @@ def main():
 
     # ── Save ─────────────────────────────────────────────────────
     out_dir = Path(__file__).resolve().parent
-    out_path = out_dir / "dataset.csv"
+    out_path = out_dir / "../dataset.csv"
     df.to_csv(out_path, index=False)
 
     # ── Print summary ────────────────────────────────────────────
