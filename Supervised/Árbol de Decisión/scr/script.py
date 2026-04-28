@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import os
 import json
+import shutil
+import sys
 from pathlib import Path
+import tempfile
 
 import joblib
 import pandas as pd
@@ -34,10 +38,15 @@ CATEGORICAL_FEATURES = [
 
 
 def parse_args() -> argparse.Namespace:
+    """Define los argumentos de entrada del script."""
     parser = argparse.ArgumentParser(
         description="Script general Arbol de Decision: train/evaluate para los 4 targets"
     )
-    parser.add_argument("--data", required=True, help="Ruta al CSV de entrada")
+    parser.add_argument(
+        "--data",
+        default="load/dataset.csv",
+        help="Ruta al CSV de entrada (por defecto: load/dataset.csv)",
+    )
     parser.add_argument(
         "--task",
         choices=["train", "evaluate", "both"],
@@ -50,14 +59,18 @@ def parse_args() -> argparse.Namespace:
         help="CSV para evaluacion/prediccion (si no se indica, usa --data)",
     )
     parser.add_argument("--test-size", type=float, default=0.2, help="Proporcion para test")
+    parser.add_argument("--val-size", type=float, default=0.2, help="Proporcion para validacion")
     parser.add_argument("--random-state", type=int, default=42, help="Semilla")
     return parser.parse_args()
 
 
 def build_pipeline(random_state: int) -> Pipeline:
+    """Construye el pipeline de preprocesamiento y clasificación."""
     preprocessor = ColumnTransformer(
         transformers=[
+            # Variables numéricas: imputación con mediana.
             ("num", SimpleImputer(strategy="median"), NUMERIC_FEATURES),
+            # Variables categóricas: imputación con moda y codificación one-hot.
             ("cat", Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
@@ -84,21 +97,49 @@ def build_pipeline(random_state: int) -> Pipeline:
 
 
 def validate_feature_columns(df: pd.DataFrame) -> None:
+    """Verifica que el DataFrame tenga las columnas de entrada requeridas."""
     missing = [c for c in (NUMERIC_FEATURES + CATEGORICAL_FEATURES) if c not in df.columns]
     if missing:
         raise ValueError(f"Faltan columnas de entrada: {missing}")
 
 
+def load_dataframe_via_module(csv_path: Path) -> pd.DataFrame:
+    """Carga el CSV usando load.load.load_data sin modificar ese módulo."""
+    proj_root = Path(__file__).resolve().parents[3]
+    if str(proj_root) not in sys.path:
+        sys.path.insert(0, str(proj_root))
+
+    from load.load import load_data
+
+    # Copia temporalmente el CSV a dataset.csv porque load_data lee ese nombre fijo.
+    with tempfile.TemporaryDirectory() as temp_dir:
+        temp_dataset_path = Path(temp_dir) / "dataset.csv"
+        shutil.copyfile(csv_path, temp_dataset_path)
+
+        current_dir = Path.cwd()
+        try:
+            os.chdir(temp_dir)
+            return load_data()
+        finally:
+            os.chdir(current_dir)
+
+
 def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> None:
+    """Entrena un modelo por target y guarda modelo y métricas."""
     required_columns = NUMERIC_FEATURES + CATEGORICAL_FEATURES + [target]
     missing = [col for col in required_columns if col not in df.columns]
     if missing:
         raise ValueError(f"Faltan columnas requeridas para {target}: {missing}")
 
+    # Separar variables explicativas y la etiqueta objetivo.
     X = df[NUMERIC_FEATURES + CATEGORICAL_FEATURES]
     y = df[target]
 
-    X_train, X_test, y_train, y_test = train_test_split(
+    if args.test_size + args.val_size >= 1.0:
+        raise ValueError("La suma de --test-size y --val-size debe ser menor que 1.0")
+
+    # Primer corte: reservar el conjunto de prueba.
+    X_temp, X_test, y_temp, y_test = train_test_split(
         X,
         y,
         test_size=args.test_size,
@@ -106,20 +147,31 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
         stratify=y,
     )
 
+    # Segundo corte: dividir el resto en entrenamiento y validación.
+    val_rel = args.val_size / (1.0 - args.test_size)
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_temp,
+        y_temp,
+        test_size=val_rel,
+        random_state=args.random_state,
+        stratify=y_temp,
+    )
+
     pipeline = build_pipeline(args.random_state)
     pipeline.fit(X_train, y_train)
 
-    y_pred = pipeline.predict(X_test)
+    # Se reportan métricas sobre validación; el test queda reservado para uso externo.
+    y_pred = pipeline.predict(X_val)
     metrics = {
         "target": target,
         "model": "DecisionTreeClassifier",
         "n_rows": int(len(df)),
-        "accuracy": float(accuracy_score(y_test, y_pred)),
-        "f1_macro": float(f1_score(y_test, y_pred, average="macro")),
-        "classification_report": classification_report(y_test, y_pred, output_dict=True),
+        "accuracy": float(accuracy_score(y_val, y_pred)),
+        "f1_macro": float(f1_score(y_val, y_pred, average="macro")),
+        "classification_report": classification_report(y_val, y_pred, output_dict=True),
     }
 
-    report_dir = Path(__file__).resolve().parents[2] / "reports" / target
+    report_dir = Path(__file__).resolve().parents[1] / "reports" / target
     report_dir.mkdir(parents=True, exist_ok=True)
 
     model_path = report_dir / "model.joblib"
@@ -133,9 +185,11 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
+    """Carga el modelo entrenado y genera predicciones/evaluación."""
     validate_feature_columns(df)
 
-    report_dir = Path(__file__).resolve().parents[2] / "reports" / target
+    # Los artefactos del modelo se guardan junto a la carpeta del script.
+    report_dir = Path(__file__).resolve().parents[1] / "reports" / target
     report_dir.mkdir(parents=True, exist_ok=True)
     model_path = report_dir / "model.joblib"
 
@@ -174,13 +228,15 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
 
 
 def main() -> None:
+    """Punto de entrada principal: carga datos y ejecuta train/evaluate."""
     args = parse_args()
     data_path = Path(args.data)
 
     if not data_path.exists():
         raise FileNotFoundError(f"No existe el CSV de entrada: {data_path}")
 
-    train_df = pd.read_csv(data_path)
+    # Cargar el dataset etiquetado que se pasa por --data.
+    train_df = load_dataframe_via_module(data_path)
 
     if args.task in {"train", "both"}:
         for target in TARGETS:
@@ -188,10 +244,11 @@ def main() -> None:
 
     if args.task in {"evaluate", "both"}:
         eval_data_path = Path(args.eval_data) if args.eval_data else data_path
+
         if not eval_data_path.exists():
             raise FileNotFoundError(f"No existe el CSV de evaluacion: {eval_data_path}")
 
-        eval_df = pd.read_csv(eval_data_path)
+        eval_df = load_dataframe_via_module(eval_data_path)
         for target in TARGETS:
             evaluate_target(eval_df, target)
 
