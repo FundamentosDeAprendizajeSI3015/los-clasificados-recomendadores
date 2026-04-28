@@ -39,42 +39,42 @@ Ejemplo concreto de como quedaria una fila:
 
 ## Algoritmos implementados
 
-### RandomForest
+### Árbol de Decisión
 
-El script general de RandomForest esta en `RandomForest/scr/script.py` y unifica entrenamiento + evaluacion para los 4 targets en una sola corrida.
-
-Detalles principales:
-
-- Modelo: `RandomForestClassifier`
-- Preprocesamiento:
-- variables numericas en passthrough
-- variables categoricas con `OneHotEncoder(handle_unknown="ignore")`
-- Entrenamiento por target con `train_test_split` estratificado
-- Metricas: accuracy, f1 macro y classification report
-- Salidas por target en `reports/<target>/`
-
-### SVM
-
-El script general de SVM esta en `SVM/scr/script.py` y tambien ejecuta entrenamiento + evaluacion para los 4 targets desde un solo archivo.
+El script general de Árbol de Decisión está en `Árbol de Decisión/scr/script.py` y unifica entrenamiento + evaluación para los 4 targets en una sola corrida.
 
 Detalles principales:
 
-- Modelo: `SVC` con kernel RBF
+- Modelo: `DecisionTreeClassifier`
 - Preprocesamiento:
-- variables numericas con `StandardScaler`
-- variables categoricas con `OneHotEncoder(handle_unknown="ignore")`
+  - variables numéricas con `SimpleImputer(median)`
+  - variables categóricas con `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown="ignore")`
 - Entrenamiento por target con `train_test_split` estratificado
-- Metricas: accuracy, f1 macro y classification report
+- Métricas: accuracy, f1 macro y classification report
 - Salidas por target en `reports/<target>/`
 
-## Organizacion de carpetas
+### Regresión Logística
 
-Se dejo un solo script por algoritmo en `scr/` (sin dividir en train/evaluate por target), y se mantiene `reports/` separado por target para conservar trazabilidad de resultados.
+El script general de Regresión Logística está en `Regresión Logística/scr/script.py` y también ejecuta entrenamiento + evaluación para los 4 targets desde un solo archivo.
+
+Detalles principales:
+
+- Modelo: `LogisticRegression`
+- Preprocesamiento:
+  - variables numéricas con `SimpleImputer(median)` + `StandardScaler`
+  - variables categóricas con `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown="ignore")`
+- Entrenamiento por target con `train_test_split` estratificado
+- Métricas: accuracy, f1 macro y classification report
+- Salidas por target en `reports/<target>/`
+
+## Organización de carpetas
+
+Se dejó un solo script por algoritmo en `scr/` (sin dividir en train/evaluate por target), y se mantiene `reports/` separado por target para conservar trazabilidad de resultados.
 
 ```text
 Supervised/
 	README.md
-	RandomForest/
+	Árbol de Decisión/
 		scr/
 			script.py
 		reports/
@@ -82,7 +82,7 @@ Supervised/
 			genero_musical_rec/
 			genero_serie_rec/
 			tipo_vino_rec/
-	SVM/
+	Regresión Logística/
 		scr/
 			script.py
 		reports/
@@ -92,22 +92,22 @@ Supervised/
 			tipo_vino_rec/
 ```
 
-## Uso rapido
+## Uso rápido
 
-Ejecutar RandomForest (train + evaluate):
-
-```bash
-python Supervised/RandomForest/scr/script.py --data <ruta_csv> --task both
-```
-
-Ejecutar SVM (train + evaluate):
+Ejecutar Árbol de Decisión (train + evaluate):
 
 ```bash
-python Supervised/SVM/scr/script.py --data <ruta_csv> --task both
+python "Árbol de Decisión/scr/script.py" --data <ruta_csv> --task both
 ```
 
-Opciones utiles:
+Ejecutar Regresión Logística (train + evaluate):
+
+```bash
+python "Regresión Logística/scr/script.py" --data <ruta_csv> --task both
+```
+
+Opciones útiles:
 
 - `--task train` solo entrena
-- `--task evaluate` solo evalua/predice usando modelos ya guardados
+- `--task evaluate` solo evalúa/predice usando modelos ya guardados
 - `--eval-data <ruta_csv>` para evaluar/predicir con otro dataset
