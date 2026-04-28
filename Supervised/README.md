@@ -1,173 +1,89 @@
 # Supervised
 
-Este modulo contiene la parte de aprendizaje supervisado del proyecto.
+Módulo de aprendizaje supervisado. Cada algoritmo entrena y evalúa **4 targets de clasificación** a partir de un mismo conjunto de features de usuario.
 
-## Dataset final esperado
+## Dataset
 
-Ejemplo concreto de como quedaria una fila:
+### Features de entrada
 
-| Variable usuario | Valor |
+| Feature | Tipo | Ejemplo |
+| --- | --- | --- |
+| `edad` | numérica | 28 |
+| `hora_lectura_preferida` | categórica | noche |
+| `velocidad_lectura` | categórica | alta |
+| `engagement_promedio` | numérica | 0.75 |
+| `valence_musical_pref` | numérica | 0.8 |
+| `energia_musical_pref` | numérica | 0.7 |
+| `contenido_visual_pref` | categórica | series largas |
+
+### Targets
+
+| Target | Ejemplo |
 | --- | --- |
-| `edad` | 28 |
-| `hora_lectura_preferida` | noche |
-| `velocidad_lectura` | alta |
-| `engagement_promedio` | 0.75 |
-| `valence_musical_pref` | 0.8 |
-| `energia_musical_pref` | 0.7 |
-| `contenido_visual_pref` | series largas |
-| `genero_libro_rec` (target) | thriller |
-| `tipo_vino_rec` (target) | bajo en acidez, alta graduacion |
-| `genero_musical_rec` (target) | pop energetico |
-| `genero_serie_rec` (target) | drama |
+| `genero_libro_rec` | thriller |
+| `tipo_vino_rec` | bajo en acidez, alta graduación |
+| `genero_musical_rec` | pop energético |
+| `genero_serie_rec` | drama |
 
-### Variables de entrada (features)
+## Algoritmos
 
-- `edad`
-- `hora_lectura_preferida`
-- `velocidad_lectura`
-- `engagement_promedio`
-- `valence_musical_pref`
-- `energia_musical_pref`
-- `contenido_visual_pref`
+Todos los scripts comparten la misma interfaz CLI y el mismo flujo: preprocesamiento → entrenamiento con split estratificado (80/20) → evaluación con accuracy, F1 macro y classification report.
 
-### Targets que se predicen
+| Algoritmo | Modelo | Preprocesamiento numérico | Preprocesamiento categórico | Hiperparámetros clave |
+| --- | --- | --- | --- | --- |
+| **Árbol de Decisión** | `DecisionTreeClassifier` | `SimpleImputer(median)` | `SimpleImputer(most_frequent)` + `OneHotEncoder` | `balanced`, `max_depth=12`, `min_samples_split=10`, `min_samples_leaf=3` |
+| **Regresión Logística** | `LogisticRegression` | `SimpleImputer(median)` + `StandardScaler` | `SimpleImputer(most_frequent)` + `OneHotEncoder` | `balanced`, `max_iter=2000` |
+| **RandomForest** | `RandomForestClassifier` | passthrough | `OneHotEncoder` | `n_estimators=300`, `balanced` |
+| **SVM** | `SVC` | `StandardScaler` | `OneHotEncoder` | 4 kernels (linear, poly d2, poly d3, rbf), `balanced`, `C=1.0`, `gamma=scale` |
 
-- `genero_libro_rec`
-- `tipo_vino_rec`
-- `genero_musical_rec`
-- `genero_serie_rec`
-
-## Algoritmos implementados
-
-### Árbol de Decisión
-
-El script general de Árbol de Decisión está en `Árbol de Decisión/scr/script.py` y unifica entrenamiento + evaluación para los 4 targets en una sola corrida.
-
-Detalles principales:
-
-- Modelo: `DecisionTreeClassifier`
-- Preprocesamiento:
-  - variables numéricas con `SimpleImputer(median)`
-  - variables categóricas con `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown="ignore")`
-- Entrenamiento por target con `train_test_split` estratificado
-- Métricas: accuracy, f1 macro y classification report
-- Salidas por target en `reports/<target>/`
-
-### Regresión Logística
-
-El script general de Regresión Logística está en `Regresión Logística/scr/script.py` y también ejecuta entrenamiento + evaluación para los 4 targets desde un solo archivo.
-
-Detalles principales:
-
-- Modelo: `LogisticRegression`
-- Preprocesamiento:
-  - variables numéricas con `SimpleImputer(median)` + `StandardScaler`
-  - variables categóricas con `SimpleImputer(most_frequent)` + `OneHotEncoder(handle_unknown="ignore")`
-- Entrenamiento por target con `train_test_split` estratificado
-- Métricas: accuracy, f1 macro y classification report
-- Salidas por target en `reports/<target>/`
-
-### RandomForest
-
-El script general de RandomForest está en `RandomForest/scr/script.py` y ejecuta entrenamiento + evaluación para los 4 targets desde un solo archivo.
-
-Detalles principales:
-
-- Modelo: `RandomForestClassifier` (300 árboles, balanced)
-- Preprocesamiento:
-	- variables numéricas: sin transformación
-	- variables categóricas: `OneHotEncoder(handle_unknown="ignore")`
-- Entrenamiento por target con `train_test_split` estratificado
-- Métricas: accuracy, f1 macro y classification report
-- Salidas por target en `reports/<target>/`
-
-### SVM
-
-El script general de SVM está en `SVM/scr/script.py` y ejecuta entrenamiento + evaluación para los 4 targets, probando 4 kernels distintos (lineal, polinomial grado 2, polinomial grado 3, radial).
-
-Detalles principales:
-
-- Modelo: `SVC` (con kernels: linear, poly grado 2, poly grado 3, rbf)
-- Preprocesamiento:
-	- variables numéricas: `StandardScaler`
-	- variables categóricas: `OneHotEncoder(handle_unknown="ignore")`
-- Entrenamiento por target y por kernel con `train_test_split` estratificado
-- Métricas: accuracy, f1 macro y classification report
-- Salidas por target y kernel en `reports/<target>/<kernel>/`
-
-## Organización de carpetas
-
-Se dejó un solo script por algoritmo en `scr/` (sin dividir en train/evaluate por target), y se mantiene `reports/` separado por target para conservar trazabilidad de resultados.
+## Estructura de carpetas
 
 ```text
 Supervised/
-	README.md
-	Árbol de Decisión/
-		scr/
-			script.py
-		reports/
-			genero_libro_rec/
-			genero_musical_rec/
-			genero_serie_rec/
-			tipo_vino_rec/
-	Regresión Logística/
-		scr/
-			script.py
-		reports/
-			genero_libro_rec/
-			genero_musical_rec/
-			genero_serie_rec/
-			tipo_vino_rec/
-	RandomForest/
-		scr/
-			script.py
-		reports/
-			genero_libro_rec/
-			genero_musical_rec/
-			genero_serie_rec/
-			tipo_vino_rec/
-	SVM/
-		scr/
-			script.py
-		reports/
-			genero_libro_rec/
-			genero_musical_rec/
-			genero_serie_rec/
-			tipo_vino_rec/
+├── README.md
+├── Árbol de Decisión/
+│   └── scr/script.py
+├── Regresión Logística/
+│   └── scr/script.py
+├── RandomForest/
+│   ├── scr/script.py
+│   └── reports/<target>/
+└── SVM/
+    ├── scr/script.py
+    └── reports/<target>/<kernel>/
 ```
 
-## Uso rápido
+Cada algoritmo genera sus resultados en `reports/<target>/` al ejecutarse. SVM además subdivide por kernel.
 
+## Uso
 
-
-Ejecutar Árbol de Decisión (train + evaluate):
+Todos los scripts comparten la misma interfaz CLI:
 
 ```bash
-python "Árbol de Decisión/scr/script.py" --data <ruta_csv> --task both
+python "<algoritmo>/scr/script.py" --data <ruta_csv> --task both
 ```
 
-Ejecutar Regresión Logística (train + evaluate):
+**Ejemplos:**
 
 ```bash
-python "Regresión Logística/scr/script.py" --data <ruta_csv> --task both
+python "Árbol de Decisión/scr/script.py" --data datos.csv --task both
+python "Regresión Logística/scr/script.py" --data datos.csv --task both
+python "RandomForest/scr/script.py"        --data datos.csv --task both
+python "SVM/scr/script.py"                 --data datos.csv --task both
 ```
 
-Ejecutar RandomForest (train + evaluate):
+> **⚠️ Nota sobre SVM:** A diferencia de los otros 3 scripts, SVM guarda los reports **relativos al directorio de trabajo actual** (`Path("reports")`), no relativos al script (`Path(__file__).parents[2] / "reports"`). Para que los reports queden dentro de `SVM/`, ejecutar desde la carpeta `SVM/`:
+> ```bash
+> cd SVM && python scr/script.py --data <ruta_csv> --task both
+> ```
+> Además, SVM no valida la existencia de `--eval-data` ni las columnas de entrada antes de evaluar.
 
-```bash
-python "RandomForest/scr/script.py" --data <ruta_csv> --task both
-```
-*Nota*: En RandomForest, el argumento `--data` se usa tanto para entrenamiento como para evaluación por defecto. Si se especifica `--eval-data`, se evalúa sobre ese archivo. Si el archivo de evaluación no existe, el script lanza un error.
+### Opciones CLI
 
-Ejecutar SVM (train + evaluate, todos los kernels):
-
-```bash
-python "SVM/scr/script.py" --data <ruta_csv> --task both
-```
-*Nota*: En SVM, el argumento `--data` se usa para entrenamiento y, si no se especifica `--eval-data`, también para evaluación. Si se pasa `--eval-data`, se evalúa sobre ese archivo. Si el archivo no existe, el script lanza un error.
-
-Opciones útiles (todos los scripts):
-
-- `--task train` solo entrena
-- `--task evaluate` solo evalúa/predice usando modelos ya guardados
-- `--eval-data <ruta_csv>` para evaluar/predicir con otro dataset
+| Flag | Descripción | Default |
+| --- | --- | --- |
+| `--data` | CSV de entrada (requerido) | — |
+| `--task` | `train`, `evaluate` o `both` | `both` |
+| `--eval-data` | CSV alternativo para evaluación | usa `--data` |
+| `--test-size` | Proporción para test | `0.2` |
+| `--random-state` | Semilla | `42` |
