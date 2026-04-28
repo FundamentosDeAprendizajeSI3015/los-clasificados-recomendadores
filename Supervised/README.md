@@ -67,6 +67,34 @@ Detalles principales:
 - Métricas: accuracy, f1 macro y classification report
 - Salidas por target en `reports/<target>/`
 
+### RandomForest
+
+El script general de RandomForest está en `RandomForest/scr/script.py` y ejecuta entrenamiento + evaluación para los 4 targets desde un solo archivo.
+
+Detalles principales:
+
+- Modelo: `RandomForestClassifier` (300 árboles, balanced)
+- Preprocesamiento:
+	- variables numéricas: sin transformación
+	- variables categóricas: `OneHotEncoder(handle_unknown="ignore")`
+- Entrenamiento por target con `train_test_split` estratificado
+- Métricas: accuracy, f1 macro y classification report
+- Salidas por target en `reports/<target>/`
+
+### SVM
+
+El script general de SVM está en `SVM/scr/script.py` y ejecuta entrenamiento + evaluación para los 4 targets, probando 4 kernels distintos (lineal, polinomial grado 2, polinomial grado 3, radial).
+
+Detalles principales:
+
+- Modelo: `SVC` (con kernels: linear, poly grado 2, poly grado 3, rbf)
+- Preprocesamiento:
+	- variables numéricas: `StandardScaler`
+	- variables categóricas: `OneHotEncoder(handle_unknown="ignore")`
+- Entrenamiento por target y por kernel con `train_test_split` estratificado
+- Métricas: accuracy, f1 macro y classification report
+- Salidas por target y kernel en `reports/<target>/<kernel>/`
+
 ## Organización de carpetas
 
 Se dejó un solo script por algoritmo en `scr/` (sin dividir en train/evaluate por target), y se mantiene `reports/` separado por target para conservar trazabilidad de resultados.
@@ -90,9 +118,27 @@ Supervised/
 			genero_musical_rec/
 			genero_serie_rec/
 			tipo_vino_rec/
+	RandomForest/
+		scr/
+			script.py
+		reports/
+			genero_libro_rec/
+			genero_musical_rec/
+			genero_serie_rec/
+			tipo_vino_rec/
+	SVM/
+		scr/
+			script.py
+		reports/
+			genero_libro_rec/
+			genero_musical_rec/
+			genero_serie_rec/
+			tipo_vino_rec/
 ```
 
 ## Uso rápido
+
+
 
 Ejecutar Árbol de Decisión (train + evaluate):
 
@@ -106,7 +152,21 @@ Ejecutar Regresión Logística (train + evaluate):
 python "Regresión Logística/scr/script.py" --data <ruta_csv> --task both
 ```
 
-Opciones útiles:
+Ejecutar RandomForest (train + evaluate):
+
+```bash
+python "RandomForest/scr/script.py" --data <ruta_csv> --task both
+```
+*Nota*: En RandomForest, el argumento `--data` se usa tanto para entrenamiento como para evaluación por defecto. Si se especifica `--eval-data`, se evalúa sobre ese archivo. Si el archivo de evaluación no existe, el script lanza un error.
+
+Ejecutar SVM (train + evaluate, todos los kernels):
+
+```bash
+python "SVM/scr/script.py" --data <ruta_csv> --task both
+```
+*Nota*: En SVM, el argumento `--data` se usa para entrenamiento y, si no se especifica `--eval-data`, también para evaluación. Si se pasa `--eval-data`, se evalúa sobre ese archivo. Si el archivo no existe, el script lanza un error.
+
+Opciones útiles (todos los scripts):
 
 - `--task train` solo entrena
 - `--task evaluate` solo evalúa/predice usando modelos ya guardados
