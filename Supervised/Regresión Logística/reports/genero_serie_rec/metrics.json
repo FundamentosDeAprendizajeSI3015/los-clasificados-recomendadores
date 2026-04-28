@@ -1,0 +1,52 @@
+{
+  "target": "genero_serie_rec",
+  "model": "LogisticRegression",
+  "n_rows": 1000,
+  "accuracy": 0.59,
+  "f1_macro": 0.5853455916688595,
+  "classification_report": {
+    "accion": {
+      "precision": 0.325,
+      "recall": 0.325,
+      "f1-score": 0.325,
+      "support": 40.0
+    },
+    "ciencia ficcion": {
+      "precision": 0.43243243243243246,
+      "recall": 0.4,
+      "f1-score": 0.4155844155844156,
+      "support": 40.0
+    },
+    "comedia": {
+      "precision": 0.8604651162790697,
+      "recall": 0.925,
+      "f1-score": 0.891566265060241,
+      "support": 40.0
+    },
+    "drama": {
+      "precision": 0.8536585365853658,
+      "recall": 0.875,
+      "f1-score": 0.8641975308641975,
+      "support": 40.0
+    },
+    "terror": {
+      "precision": 0.4358974358974359,
+      "recall": 0.425,
+      "f1-score": 0.43037974683544306,
+      "support": 40.0
+    },
+    "accuracy": 0.59,
+    "macro avg": {
+      "precision": 0.5814907042388608,
+      "recall": 0.5900000000000001,
+      "f1-score": 0.5853455916688595,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.5814907042388607,
+      "recall": 0.59,
+      "f1-score": 0.5853455916688595,
+      "support": 200.0
+    }
+  }
+}

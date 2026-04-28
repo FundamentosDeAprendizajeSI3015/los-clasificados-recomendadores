@@ -1,0 +1,52 @@
+{
+  "target": "genero_musical_rec",
+  "model": "LogisticRegression",
+  "n_rows": 1000,
+  "accuracy": 0.615,
+  "f1_macro": 0.609636627180487,
+  "classification_report": {
+    "electronica": {
+      "precision": 0.3611111111111111,
+      "recall": 0.325,
+      "f1-score": 0.34210526315789475,
+      "support": 40.0
+    },
+    "jazz": {
+      "precision": 0.9512195121951219,
+      "recall": 0.975,
+      "f1-score": 0.9629629629629629,
+      "support": 40.0
+    },
+    "pop": {
+      "precision": 0.5789473684210527,
+      "recall": 0.55,
+      "f1-score": 0.5641025641025641,
+      "support": 40.0
+    },
+    "reggaeton": {
+      "precision": 0.34146341463414637,
+      "recall": 0.35,
+      "f1-score": 0.345679012345679,
+      "support": 40.0
+    },
+    "rock": {
+      "precision": 0.7954545454545454,
+      "recall": 0.875,
+      "f1-score": 0.8333333333333334,
+      "support": 40.0
+    },
+    "accuracy": 0.615,
+    "macro avg": {
+      "precision": 0.6056391903631955,
+      "recall": 0.615,
+      "f1-score": 0.609636627180487,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.6056391903631955,
+      "recall": 0.615,
+      "f1-score": 0.6096366271804868,
+      "support": 200.0
+    }
+  }
+}
