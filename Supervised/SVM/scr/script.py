@@ -118,13 +118,15 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
         }
 
         # Organizar carpetas por target y luego por kernel
-        report_dir = Path("reports") / target / config["name"]
+        report_dir = Path(__file__).resolve().parents[1] / "reports" / target / config["name"]
         report_dir.mkdir(parents=True, exist_ok=True)
 
         joblib.dump(pipeline, report_dir / "model.joblib")
-        (report_dir / "metrics.json").write_text(
+        # Guardar métricas del test set como evaluation.json (fuente de verdad para comparativas)
+        (report_dir / "evaluation.json").write_text(
             json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8"
         )
+        print(f"[{target}] Evaluacion (test set) guardada para {config['name']}")
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
@@ -133,7 +135,7 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
     
     for config in KERNEL_CONFIGS:
         kernel_name = config["name"]
-        model_path = Path("reports") / target / kernel_name / "model.joblib"
+        model_path = Path(__file__).resolve().parents[1] / "reports" / target / kernel_name / "model.joblib"
 
         if not model_path.exists():
             print(f"  [!] Saltando {kernel_name}: No se encontró el modelo.")
@@ -147,20 +149,7 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
         pred_df = df.copy()
         pred_df[f"pred_{target}"] = predictions
         pred_df.to_csv(report_dir / "predictions.csv", index=False)
-
-        if target in df.columns:
-            y_true = df[target]
-            eval_metrics = {
-                "target": target,
-                "kernel": kernel_name,
-                "accuracy": float(accuracy_score(y_true, predictions)),
-                "f1_macro": float(f1_score(y_true, predictions, average="macro")),
-                "classification_report": classification_report(y_true, predictions, output_dict=True),
-            }
-            (report_dir / "evaluation.json").write_text(
-                json.dumps(eval_metrics, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
-            print(f"[{target}] Evaluación completada para {kernel_name}")
+        print(f"[{target}] Predicciones guardadas para {kernel_name}")
 
 
 def main() -> None:

@@ -24,3 +24,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Modelos entrenados y artefactos generados
+*.joblib
+*.pkl
+**/predictions.csv
+
