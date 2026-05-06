@@ -1,3 +1,11 @@
+"""
+Script de entrenamiento y evaluación utilizando Regresión Logística.
+
+Este módulo provee la funcionalidad para entrenar y evaluar modelos basados en 
+regresión logística para los cuatro objetivos (targets) del proyecto, integrando 
+el preprocesamiento de datos (imputación, escalado y codificación) de forma automática.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -38,9 +46,9 @@ CATEGORICAL_FEATURES = [
 
 
 def parse_args() -> argparse.Namespace:
-    """Define los argumentos de entrada del script."""
+    """Procesa y retorna los argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(
-        description="Script general Regresion Logistica: train/evaluate para los 4 targets"
+        description="Script general de Regresión Logística: entrenamiento y evaluación para los 4 objetivos"
     )
     parser.add_argument(
         "--data",
@@ -65,7 +73,15 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_pipeline(random_state: int) -> Pipeline:
-    """Construye el pipeline de preprocesamiento y clasificación."""
+    """
+    Construye el pipeline de preprocesamiento y clasificación con Regresión Logística.
+    
+    Argumentos:
+        random_state (int): Semilla para la reproducibilidad.
+        
+    Retorna:
+        Pipeline: El pipeline configurado listo para ser entrenado.
+    """
     preprocessor = ColumnTransformer(
         transformers=[
             # Variables numéricas: imputación con mediana y escalado.
@@ -100,14 +116,22 @@ def build_pipeline(random_state: int) -> Pipeline:
 
 
 def validate_feature_columns(df: pd.DataFrame) -> None:
-    """Verifica que el DataFrame tenga las columnas de entrada requeridas."""
+    """Verifica que el DataFrame de entrada contenga todas las características esperadas."""
     missing = [c for c in (NUMERIC_FEATURES + CATEGORICAL_FEATURES) if c not in df.columns]
     if missing:
         raise ValueError(f"Faltan columnas de entrada: {missing}")
 
 
 def load_dataframe_via_module(csv_path: Path) -> pd.DataFrame:
-    """Carga el CSV usando load.load.load_data sin modificar ese módulo."""
+    """
+    Carga el CSV usando la función `load_data` del módulo `load.load` sin modificar ese módulo.
+    
+    Argumentos:
+        csv_path (Path): Ruta al archivo CSV a cargar.
+        
+    Retorna:
+        pd.DataFrame: DataFrame con los datos cargados.
+    """
     proj_root = Path(__file__).resolve().parents[3]
     if str(proj_root) not in sys.path:
         sys.path.insert(0, str(proj_root))
@@ -128,7 +152,14 @@ def load_dataframe_via_module(csv_path: Path) -> pd.DataFrame:
 
 
 def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> None:
-    """Entrena un modelo por target y guarda modelo y métricas."""
+    """
+    Entrena un modelo de Regresión Logística para un objetivo específico y guarda modelo y métricas.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de entrenamiento.
+        target (str): Nombre de la columna objetivo a predecir.
+        args (argparse.Namespace): Argumentos de configuración.
+    """
     required_columns = NUMERIC_FEATURES + CATEGORICAL_FEATURES + [target]
     missing = [col for col in required_columns if col not in df.columns]
     if missing:
@@ -188,7 +219,13 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
-    """Carga el modelo entrenado y genera predicciones/evaluación."""
+    """
+    Carga el modelo de Regresión Logística entrenado y genera predicciones/evaluación.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de evaluación.
+        target (str): Nombre de la columna objetivo.
+    """
     validate_feature_columns(df)
 
     # Los artefactos del modelo se guardan junto a la carpeta del script.
@@ -231,7 +268,7 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
 
 
 def main() -> None:
-    """Punto de entrada principal: carga datos y ejecuta train/evaluate."""
+    """Punto de entrada principal: carga datos y orquesta el entrenamiento y/o evaluación."""
     args = parse_args()
     data_path = Path(args.data)
 

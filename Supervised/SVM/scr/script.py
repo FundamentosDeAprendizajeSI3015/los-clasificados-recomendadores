@@ -1,3 +1,11 @@
+"""
+Script de entrenamiento y evaluación utilizando Máquinas de Vectores de Soporte (SVM).
+
+Este módulo permite entrenar y evaluar modelos de clasificación SVM para los cuatro
+objetivos (targets) del sistema de recomendación, explorando distintas configuraciones 
+de kernel (lineal, polinómico de grado 2 y 3, y base radial).
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -41,6 +49,7 @@ KERNEL_CONFIGS = [
 ]
 
 def parse_args() -> argparse.Namespace:
+    """Procesa y retorna los argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(
         description="Script SVM: Entrenamiento y evaluación con 4 kernels distintos."
     )
@@ -62,7 +71,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_pipeline(kernel_type: str, degree: int, random_state: int) -> Pipeline:
-    """Crea el pipeline con el kernel y grado especificados."""
+    """
+    Crea el pipeline con el kernel y grado especificados.
+    
+    Argumentos:
+        kernel_type (str): Tipo de kernel a utilizar ('linear', 'poly', 'rbf').
+        degree (int): Grado del kernel (solo aplica para 'poly').
+        random_state (int): Semilla para la reproducibilidad.
+        
+    Retorna:
+        Pipeline: El pipeline configurado listo para ser entrenado.
+    """
     preprocessor = ColumnTransformer(
         transformers=[
             ("num", StandardScaler(), NUMERIC_FEATURES),
@@ -88,6 +107,14 @@ def build_pipeline(kernel_type: str, degree: int, random_state: int) -> Pipeline
 
 
 def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> None:
+    """
+    Entrena modelos SVM con diferentes configuraciones de kernel para un objetivo específico.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de entrenamiento.
+        target (str): Nombre de la columna objetivo a predecir.
+        args (argparse.Namespace): Argumentos de configuración.
+    """
     X = df[NUMERIC_FEATURES + CATEGORICAL_FEATURES]
     y = df[target]
 
@@ -130,7 +157,13 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
-    """Evalúa todos los kernels disponibles para un target específico."""
+    """
+    Evalúa todos los kernels disponibles que han sido entrenados para un objetivo específico.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de evaluación.
+        target (str): Nombre de la columna objetivo.
+    """
     X = df[NUMERIC_FEATURES + CATEGORICAL_FEATURES]
     
     for config in KERNEL_CONFIGS:
@@ -153,6 +186,7 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
 
 
 def main() -> None:
+    """Función principal que orquesta el flujo de entrenamiento y/o evaluación para SVM."""
     args = parse_args()
     data_path = Path(args.data)
 
