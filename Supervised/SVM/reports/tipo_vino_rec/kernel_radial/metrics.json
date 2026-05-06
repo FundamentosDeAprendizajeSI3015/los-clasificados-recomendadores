@@ -1,0 +1,55 @@
+{
+  "target": "tipo_vino_rec",
+  "kernel_used": "kernel_radial",
+  "params": {
+    "kernel": "rbf",
+    "degree": 3
+  },
+  "accuracy": 0.6,
+  "f1_macro": 0.583926382364413,
+  "classification_report": {
+    "afrutado": {
+      "precision": 0.45454545454545453,
+      "recall": 0.625,
+      "f1-score": 0.5263157894736842,
+      "support": 40.0
+    },
+    "bajo en acidez": {
+      "precision": 0.7317073170731707,
+      "recall": 0.75,
+      "f1-score": 0.7407407407407407,
+      "support": 40.0
+    },
+    "dulce": {
+      "precision": 0.38461538461538464,
+      "recall": 0.25,
+      "f1-score": 0.30303030303030304,
+      "support": 40.0
+    },
+    "espumoso": {
+      "precision": 0.6981132075471698,
+      "recall": 0.925,
+      "f1-score": 0.7956989247311828,
+      "support": 40.0
+    },
+    "seco": {
+      "precision": 0.72,
+      "recall": 0.45,
+      "f1-score": 0.5538461538461539,
+      "support": 40.0
+    },
+    "accuracy": 0.6,
+    "macro avg": {
+      "precision": 0.5977962727562358,
+      "recall": 0.6,
+      "f1-score": 0.583926382364413,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.5977962727562359,
+      "recall": 0.6,
+      "f1-score": 0.5839263823644129,
+      "support": 200.0
+    }
+  }
+}

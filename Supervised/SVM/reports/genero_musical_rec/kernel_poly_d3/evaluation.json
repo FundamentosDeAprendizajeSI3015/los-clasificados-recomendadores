@@ -1,0 +1,55 @@
+{
+  "target": "genero_musical_rec",
+  "kernel_used": "kernel_poly_d3",
+  "params": {
+    "kernel": "poly",
+    "degree": 3
+  },
+  "accuracy": 0.65,
+  "f1_macro": 0.660829326701667,
+  "classification_report": {
+    "electronica": {
+      "precision": 0.37037037037037035,
+      "recall": 0.5,
+      "f1-score": 0.425531914893617,
+      "support": 40.0
+    },
+    "jazz": {
+      "precision": 0.9459459459459459,
+      "recall": 0.875,
+      "f1-score": 0.9090909090909091,
+      "support": 40.0
+    },
+    "pop": {
+      "precision": 0.7837837837837838,
+      "recall": 0.725,
+      "f1-score": 0.7532467532467533,
+      "support": 40.0
+    },
+    "reggaeton": {
+      "precision": 0.40540540540540543,
+      "recall": 0.375,
+      "f1-score": 0.38961038961038963,
+      "support": 40.0
+    },
+    "rock": {
+      "precision": 0.8857142857142857,
+      "recall": 0.775,
+      "f1-score": 0.8266666666666667,
+      "support": 40.0
+    },
+    "accuracy": 0.65,
+    "macro avg": {
+      "precision": 0.6782439582439582,
+      "recall": 0.65,
+      "f1-score": 0.660829326701667,
+      "support": 200.0
+    },
+    "weighted avg": {
+      "precision": 0.6782439582439582,
+      "recall": 0.65,
+      "f1-score": 0.6608293267016672,
+      "support": 200.0
+    }
+  }
+}
