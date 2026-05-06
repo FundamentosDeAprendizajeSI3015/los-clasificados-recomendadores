@@ -111,23 +111,24 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
         "classification_report": classification_report(y_test, y_pred, output_dict=True),
     }
 
-    report_dir = Path(__file__).resolve().parents[2] / "reports" / target
+    report_dir = Path(__file__).resolve().parents[1] / "reports" / target
     report_dir.mkdir(parents=True, exist_ok=True)
 
     model_path = report_dir / "model.joblib"
-    metrics_path = report_dir / "metrics.json"
-
     joblib.dump(pipeline, model_path)
-    metrics_path.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # Guardar métricas del test set como evaluation.json (fuente de verdad para comparativas)
+    eval_path = report_dir / "evaluation.json"
+    eval_path.write_text(json.dumps(metrics, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(f"[{target}] Modelo guardado en: {model_path}")
-    print(f"[{target}] Metricas de train guardadas en: {metrics_path}")
+    print(f"[{target}] Evaluacion (test set) guardada en: {eval_path}")
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
     validate_feature_columns(df)
 
-    report_dir = Path(__file__).resolve().parents[2] / "reports" / target
+    report_dir = Path(__file__).resolve().parents[1] / "reports" / target
     report_dir.mkdir(parents=True, exist_ok=True)
     model_path = report_dir / "model.joblib"
 
@@ -143,26 +144,6 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
     predictions_path = report_dir / "predictions.csv"
     pred_df.to_csv(predictions_path, index=False)
     print(f"[{target}] Predicciones guardadas en: {predictions_path}")
-
-    if target in df.columns:
-        y_true = df[target]
-        metrics = {
-            "target": target,
-            "model": "RandomForestClassifier",
-            "accuracy": float(accuracy_score(y_true, predictions)),
-            "f1_macro": float(f1_score(y_true, predictions, average="macro")),
-            "classification_report": classification_report(
-                y_true,
-                predictions,
-                output_dict=True,
-            ),
-        }
-        metrics_path = report_dir / "evaluation.json"
-        metrics_path.write_text(
-            json.dumps(metrics, indent=2, ensure_ascii=False),
-            encoding="utf-8",
-        )
-        print(f"[{target}] Evaluacion guardada en: {metrics_path}")
 
 
 def main() -> None:
