@@ -1,4 +1,3 @@
-import os
 import json
 import pandas as pd
 from pathlib import Path
@@ -29,19 +28,30 @@ def collect_all_metrics():
         for task_folder in reports_path.iterdir():
             if not task_folder.is_dir():
                 continue
-            
+
             task_name = task_folder.name
-            
-            # Leer evaluation.json (métricas principales)
+
             evaluation_file = task_folder / "evaluation.json"
-            
+
             if evaluation_file.exists():
-                with open(evaluation_file, 'r', encoding='utf-8') as f:
+                # Estructura estándar: reports/{target}/evaluation.json
+                candidates = [(model_name, evaluation_file)]
+            else:
+                # Estructura anidada (SVM): reports/{target}/{variante}/evaluation.json
+                candidates = []
+                for variant_folder in sorted(task_folder.iterdir()):
+                    if not variant_folder.is_dir():
+                        continue
+                    nested_eval = variant_folder / "evaluation.json"
+                    if nested_eval.exists():
+                        candidates.append((f"{model_name} ({variant_folder.name})", nested_eval))
+
+            for display_model, eval_path in candidates:
+                with open(eval_path, 'r', encoding='utf-8') as f:
                     eval_data = json.load(f)
-                
-                # Extraer métricas principales
+
                 metric_row = {
-                    "Modelo": model_name,
+                    "Modelo": display_model,
                     "Tarea": task_name,
                     "Accuracy": eval_data.get("accuracy", None),
                     "F1_Macro": eval_data.get("f1_macro", None),
@@ -50,7 +60,7 @@ def collect_all_metrics():
                     "Precision_Weighted": eval_data.get("classification_report", {}).get("weighted avg", {}).get("precision", None),
                     "Recall_Weighted": eval_data.get("classification_report", {}).get("weighted avg", {}).get("recall", None),
                 }
-                
+
                 metrics_data.append(metric_row)
     
     # Crear DataFrame
