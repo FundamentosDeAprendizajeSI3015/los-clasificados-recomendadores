@@ -1,3 +1,11 @@
+"""
+Script de entrenamiento y evaluación utilizando RandomForestClassifier.
+
+Este módulo permite entrenar y evaluar modelos de clasificación para los cuatro
+objetivos (targets) del sistema de recomendación, manejando tanto variables 
+numéricas como categóricas mediante un pipeline de preprocesamiento.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -13,6 +21,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
+# --- CONFIGURACIÓN DE VARIABLES ---
 TARGETS = [
     "genero_libro_rec",
     "genero_musical_rec",
@@ -33,8 +42,9 @@ CATEGORICAL_FEATURES = [
 
 
 def parse_args() -> argparse.Namespace:
+    """Procesa y retorna los argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(
-        description="Script general RandomForest: train/evaluate para los 4 targets"
+        description="Script general RandomForest: entrenamiento y evaluación para los 4 objetivos"
     )
     parser.add_argument("--data", required=True, help="Ruta al CSV de entrada")
     parser.add_argument(
@@ -54,6 +64,15 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_pipeline(random_state: int) -> Pipeline:
+    """
+    Construye un pipeline de scikit-learn con preprocesamiento y el modelo RandomForest.
+    
+    Argumentos:
+        random_state (int): Semilla para la reproducibilidad.
+        
+    Retorna:
+        Pipeline: El pipeline configurado listo para ser entrenado.
+    """
     preprocessor = ColumnTransformer(
         transformers=[
             ("num", "passthrough", NUMERIC_FEATURES),
@@ -76,12 +95,21 @@ def build_pipeline(random_state: int) -> Pipeline:
 
 
 def validate_feature_columns(df: pd.DataFrame) -> None:
+    """Verifica que el DataFrame de entrada contenga todas las características esperadas."""
     missing = [c for c in (NUMERIC_FEATURES + CATEGORICAL_FEATURES) if c not in df.columns]
     if missing:
         raise ValueError(f"Faltan columnas de entrada: {missing}")
 
 
 def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> None:
+    """
+    Entrena un modelo RandomForest para un objetivo específico y guarda los artefactos generados.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de entrenamiento.
+        target (str): Nombre de la columna objetivo a predecir.
+        args (argparse.Namespace): Argumentos de configuración.
+    """
     required_columns = NUMERIC_FEATURES + CATEGORICAL_FEATURES + [target]
     missing = [col for col in required_columns if col not in df.columns]
     if missing:
@@ -126,6 +154,13 @@ def train_target(df: pd.DataFrame, target: str, args: argparse.Namespace) -> Non
 
 
 def evaluate_target(df: pd.DataFrame, target: str) -> None:
+    """
+    Evalúa el modelo previamente entrenado para un objetivo dado y guarda las predicciones.
+    
+    Argumentos:
+        df (pd.DataFrame): DataFrame con los datos de evaluación.
+        target (str): Nombre de la columna objetivo.
+    """
     validate_feature_columns(df)
 
     report_dir = Path(__file__).resolve().parents[1] / "reports" / target
@@ -147,6 +182,7 @@ def evaluate_target(df: pd.DataFrame, target: str) -> None:
 
 
 def main() -> None:
+    """Función principal que orquesta el flujo de entrenamiento y/o evaluación."""
     args = parse_args()
     data_path = Path(args.data)
 
