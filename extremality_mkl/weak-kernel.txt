@@ -1,2 +1,0 @@
-es un kernel polinomial, sin la C, normalmente es (<px,py>)^d, sin embargo, para el del profe no es así, 
-c es un parámetro en 0, y d se inicializa aleatoriamente entre 1 y 3, o el máximo de las n carac que se tienen
