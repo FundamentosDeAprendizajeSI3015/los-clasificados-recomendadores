@@ -171,8 +171,9 @@ Genera las métricas de evaluación y visualizaciones de resultados:
 | Agustin | EDA y preprocesamiento |
 | Nicolas | Carga de datos (load) |
 | Camilo | Clustering no supervisado |
-| Luis / alejandro | Modelos supervisados |
-| Isabella | Visualización y métricas |
+| Luis / Alejandro | Modelos supervisados |
+| Isabella | Visualización |
+| Martin | Métricas |
 
 ---
 
