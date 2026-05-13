@@ -20,9 +20,9 @@ from pathlib import Path
 SEED = 42
 rng = np.random.default_rng(SEED)
 
-N = 1000  # total number of rows
+N = 1_000_000  # total number of rows
 
-# ── target classes (5 per target → 200 rows each for balance) ───
+# ── target classes (5 per target → 200000 rows each for balance) ───
 TARGET_CLASSES = {
     "genero_libro_rec":   ["thriller", "romance", "ciencia ficcion", "fantasia", "no ficcion"],
     "tipo_vino_rec":      ["bajo en acidez", "afrutado", "seco", "dulce", "espumoso"],
@@ -30,7 +30,7 @@ TARGET_CLASSES = {
     "genero_serie_rec":   ["drama", "comedia", "accion", "ciencia ficcion", "terror"],
 }
 
-ROWS_PER_CLASS = N // 5  # 200
+ROWS_PER_CLASS = N // 5  # 200000
 
 # ── categorical feature options ─────────────────────────────────
 HORAS_LECTURA = ["manana", "tarde", "noche"]
