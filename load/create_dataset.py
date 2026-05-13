@@ -1,14 +1,14 @@
 """
-Fake dataset generator for the recommender system project.
+Generador de un conjunto de datos sintético para el proyecto de sistemas de recomendación.
 
-Target variables and their classes:
+Variables objetivo y sus clases correspondientes:
 ──────────────────────────────────────────────────────────────────
-  genero_libro_rec   (5 classes): thriller, romance, ciencia ficcion, fantasia, no ficcion
-  tipo_vino_rec      (5 classes): bajo en acidez, afrutado, seco, dulce, espumoso
-  genero_musical_rec (5 classes): pop, rock, electronica, jazz, reggaeton
-  genero_serie_rec   (5 classes): drama, comedia, accion, ciencia ficcion, terror
+  genero_libro_rec   (5 clases): thriller, romance, ciencia ficción, fantasía, no ficción
+  tipo_vino_rec      (5 clases): bajo en acidez, afrutado, seco, dulce, espumoso
+  genero_musical_rec (5 clases): pop, rock, electrónica, jazz, reggaetón
+  genero_serie_rec   (5 clases): drama, comedia, acción, ciencia ficción, terror
 
-Total rows : 1,000  (balanced → 200 rows per class in each target)
+Total de registros : 1,000 (balanceado → 200 registros por clase en cada objetivo)
 ──────────────────────────────────────────────────────────────────
 """
 
@@ -16,13 +16,15 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-# ── reproducibility ──────────────────────────────────────────────
+# ── Reproducibilidad ─────────────────────────────────────────────
 SEED = 42
 rng = np.random.default_rng(SEED)
 
 N = 1_000_000  # total number of rows
 
 # ── target classes (5 per target → 200000 rows each for balance) ───
+
+# ── Clases objetivo (5 por objetivo → 200 registros cada una para mantener balance) ───
 TARGET_CLASSES = {
     "genero_libro_rec":   ["thriller", "romance", "ciencia ficcion", "fantasia", "no ficcion"],
     "tipo_vino_rec":      ["bajo en acidez", "afrutado", "seco", "dulce", "espumoso"],
@@ -32,20 +34,20 @@ TARGET_CLASSES = {
 
 ROWS_PER_CLASS = N // 5  # 200000
 
-# ── categorical feature options ─────────────────────────────────
+# ── Opciones para características categóricas ─────────────────────
 HORAS_LECTURA = ["manana", "tarde", "noche"]
 VELOCIDAD_LECTURA = ["baja", "media", "alta"]
 CONTENIDO_VISUAL = ["peliculas", "series largas", "series cortas", "documentales", "anime"]
 
 
-# ── helper: clamp a value within [lo, hi] ───────────────────────
+# ── Función auxiliar: restringe un valor dentro del rango [lo, hi] ─
 def clamp(x: float, lo: float = 0.0, hi: float = 1.0) -> float:
     return max(lo, min(hi, x))
 
 
-# ── feature generation conditioned on target classes ─────────────
-# Each profile defines realistic tendencies so classifiers can learn
-# meaningful patterns, while still adding noise for realism.
+# ── Generación de características condicionadas por clases objetivo ─
+# Cada perfil define tendencias realistas para que los clasificadores 
+# puedan aprender patrones significativos, añadiendo ruido para mayor realismo.
 
 PROFILES = {
     # ── genero_libro_rec profiles ──
@@ -77,7 +79,7 @@ PROFILES = {
     "serie_terror":           {"edad_mu": 26, "edad_sigma": 6,  "hora_w": [0.10, 0.20, 0.70], "vel_w": [0.10, 0.35, 0.55], "engage_mu": 0.78, "valence_mu": 0.30, "energia_mu": 0.75, "visual_w": [0.25, 0.35, 0.15, 0.05, 0.20]},
 }
 
-# Map from (target_col, class_label) → profile key
+# Mapeo de la tupla (columna_objetivo, etiqueta_clase) al nombre del perfil correspondiente
 PROFILE_MAP = {
     ("genero_libro_rec",   "thriller"):         "libro_thriller",
     ("genero_libro_rec",   "romance"):          "libro_romance",
@@ -106,7 +108,7 @@ PROFILE_MAP = {
 
 
 def generate_features_from_profile(profile: dict, n: int) -> dict:
-    """Generate feature columns for *n* rows following the given profile."""
+    """Genera columnas de características para *n* registros siguiendo el perfil dado."""
     edad = np.clip(rng.normal(profile["edad_mu"], profile["edad_sigma"], n).astype(int), 18, 65)
     hora = rng.choice(HORAS_LECTURA, size=n, p=profile["hora_w"])
     velocidad = rng.choice(VELOCIDAD_LECTURA, size=n, p=profile["vel_w"])
@@ -134,16 +136,17 @@ def generate_features_from_profile(profile: dict, n: int) -> dict:
 
 def build_dataset() -> pd.DataFrame:
     """
-    Build the full 1000-row dataset.
+    Construye el conjunto de datos completo de 1000 registros.
 
-    Strategy:
-      1. Pick the *first* target (genero_libro_rec) as the primary driver and
-         generate features conditioned on its classes (200 rows each → balanced).
-      2. For the remaining 3 targets, assign classes based on feature affinity
-         using a soft scoring mechanism, then resample to enforce exact balance.
+    Estrategia:
+      1. Selecciona el *primer* objetivo (genero_libro_rec) como el principal y
+         genera características condicionadas a sus clases (200 registros c/u → balanceado).
+      2. Para los 3 objetivos restantes, asigna clases basadas en la afinidad
+         de las características usando un mecanismo de puntuación suave, luego
+         re-muestrea para forzar un balance exacto.
     """
 
-    # ── Step 1: balanced primary target + conditioned features ───
+    # ── Paso 1: Objetivo primario balanceado + características condicionadas ───
     rows = []
     for cls in TARGET_CLASSES["genero_libro_rec"]:
         profile = PROFILES[PROFILE_MAP[("genero_libro_rec", cls)]]
@@ -155,32 +158,32 @@ def build_dataset() -> pd.DataFrame:
 
     df = pd.DataFrame(rows)
 
-    # ── Step 2: assign remaining targets via scoring + balancing ─
+    # ── Paso 2: Asignación de los demás objetivos vía puntuación y balanceo ─
     for target_col in ["tipo_vino_rec", "genero_musical_rec", "genero_serie_rec"]:
         classes = TARGET_CLASSES[target_col]
 
-        # Compute affinity scores for each class
+        # Calcular puntuaciones de afinidad para cada clase
         scores = np.zeros((N, len(classes)))
         for j, cls in enumerate(classes):
             profile = PROFILES[PROFILE_MAP[(target_col, cls)]]
-            # numerical similarity (gaussian-like distance)
+            # Similitud numérica (distancia tipo gaussiana)
             edad_score = np.exp(-0.5 * ((df["edad"].values - profile["edad_mu"]) / profile["edad_sigma"]) ** 2)
             engage_score = np.exp(-0.5 * ((df["engagement_promedio"].values - profile["engage_mu"]) / 0.12) ** 2)
             valence_score = np.exp(-0.5 * ((df["valence_musical_pref"].values - profile["valence_mu"]) / 0.12) ** 2)
             energia_score = np.exp(-0.5 * ((df["energia_musical_pref"].values - profile["energia_mu"]) / 0.12) ** 2)
             scores[:, j] = edad_score * engage_score * valence_score * energia_score
 
-        # Normalize to probabilities per row
+        # Normalizar para obtener probabilidades por fila
         row_sums = scores.sum(axis=1, keepdims=True)
         probs = scores / row_sums
 
-        # Assign class by weighted random draw
+        # Asignar clase mediante una extracción aleatoria ponderada
         assignments = np.array([rng.choice(classes, p=probs[i]) for i in range(N)])
 
-        # ── Enforce balance via swapping ──
-        # We reshuffle assignments so that each class has exactly 200 rows
+        # ── Forzar balance mediante intercambio de clases ──
+        # Reordenamos las asignaciones para que cada clase tenga exactamente 200 registros
         target_count = ROWS_PER_CLASS
-        for _ in range(50):  # iterative balancing passes
+        for _ in range(50):  # pasadas de balanceo iterativas
             class_counts = {c: np.sum(assignments == c) for c in classes}
             over = [c for c in classes if class_counts[c] > target_count]
             under = [c for c in classes if class_counts[c] < target_count]
@@ -191,11 +194,11 @@ def build_dataset() -> pd.DataFrame:
                 if excess <= 0:
                     continue
                 oc_indices = np.where(assignments == oc)[0]
-                # pick the rows with lowest affinity for this overrepresented class
+                # seleccionar las filas con menor afinidad hacia esta clase sobrerrepresentada
                 oc_class_idx = classes.index(oc)
                 weakest = oc_indices[np.argsort(probs[oc_indices, oc_class_idx])[:excess]]
                 for idx in weakest:
-                    # assign to the most underrepresented class with decent affinity
+                    # asignar a la clase más subrepresentada con una afinidad decente
                     for uc in sorted(under, key=lambda c: class_counts[c]):
                         if class_counts[uc] < target_count:
                             assignments[idx] = uc
@@ -205,7 +208,7 @@ def build_dataset() -> pd.DataFrame:
 
         df[target_col] = assignments
 
-    # ── Shuffle rows ─────────────────────────────────────────────
+    # ── Mezclar registros de forma aleatoria ─────────────────────
     df = df.sample(frac=1, random_state=SEED).reset_index(drop=True)
 
     return df
@@ -214,14 +217,14 @@ def build_dataset() -> pd.DataFrame:
 def main():
     df = build_dataset()
 
-    # ── Save ─────────────────────────────────────────────────────
+    # ── Guardar resultados ───────────────────────────────────────
     out_dir = Path(__file__).resolve().parent
     out_path = out_dir / "../dataset.csv"
     df.to_csv(out_path, index=False)
 
-    # ── Print summary ────────────────────────────────────────────
-    print(f"Dataset saved to {out_path}")
-    print(f"Shape: {df.shape}\n")
+    # ── Mostrar resumen en consola ───────────────────────────────
+    print(f"Conjunto de datos guardado en {out_path}")
+    print(f"Dimensiones: {df.shape}\n")
 
     for col in TARGET_CLASSES:
         print(f"── {col} ──")

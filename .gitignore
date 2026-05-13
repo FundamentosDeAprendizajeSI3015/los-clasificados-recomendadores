@@ -1,0 +1,32 @@
+# Entorno virtual
+venv/
+.env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno
+.env
+*.env
+
+# VSCode (opcional)
+.vscode/
+
+# Logs
+*.log
+
+# Modelos entrenados y artefactos generados
+*.joblib
+*.pkl
+**/predictions.csv
+
