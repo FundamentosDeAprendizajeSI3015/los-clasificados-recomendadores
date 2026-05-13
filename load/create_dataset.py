@@ -20,7 +20,9 @@ from pathlib import Path
 SEED = 42
 rng = np.random.default_rng(SEED)
 
-N = 1000  # Número total de registros a generar
+N = 1_000_000  # total number of rows
+
+# ── target classes (5 per target → 200000 rows each for balance) ───
 
 # ── Clases objetivo (5 por objetivo → 200 registros cada una para mantener balance) ───
 TARGET_CLASSES = {
@@ -30,7 +32,7 @@ TARGET_CLASSES = {
     "genero_serie_rec":   ["drama", "comedia", "accion", "ciencia ficcion", "terror"],
 }
 
-ROWS_PER_CLASS = N // 5  # 200
+ROWS_PER_CLASS = N // 5  # 200000
 
 # ── Opciones para características categóricas ─────────────────────
 HORAS_LECTURA = ["manana", "tarde", "noche"]
