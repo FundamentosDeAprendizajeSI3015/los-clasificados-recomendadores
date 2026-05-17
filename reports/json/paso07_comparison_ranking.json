@@ -1,0 +1,28 @@
+{
+  "ranking_por_tarea": {
+    "genero_libro_rec": {
+      "mejor_modelo": "SVM_poly_d2",
+      "accuracy": 0.7089,
+      "f1_macro": 0.7077490938208477
+    },
+    "tipo_vino_rec": {
+      "mejor_modelo": "SVM_radial",
+      "accuracy": 0.6538,
+      "f1_macro": 0.6327035957975446
+    },
+    "genero_musical_rec": {
+      "mejor_modelo": "SVM_poly_d2",
+      "accuracy": 0.7593,
+      "f1_macro": 0.7477419355226574
+    },
+    "genero_serie_rec": {
+      "mejor_modelo": "SVM_poly_d2",
+      "accuracy": 0.6976,
+      "f1_macro": 0.6860113591702344
+    }
+  },
+  "resumen_global": {
+    "mejor_accuracy_promedio": 0.70375,
+    "mejor_modelo_global": "SVM_radial"
+  }
+}

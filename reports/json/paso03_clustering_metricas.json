@@ -1,0 +1,18 @@
+{
+  "n_clusters": 5,
+  "silhouette_global": 0.10965701801261592,
+  "inercia_global": 3834873.207721931,
+  "silhouette_por_dominio": {
+    "libro": 0.1669153541584576,
+    "vino": 0.20252971884499474,
+    "musica": 0.18423177670966265,
+    "serie": 0.17633227105653201
+  },
+  "distribucion_clusters": {
+    "cluster_0": 234029,
+    "cluster_1": 176526,
+    "cluster_2": 171261,
+    "cluster_3": 203658,
+    "cluster_4": 214526
+  }
+}

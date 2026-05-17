@@ -1,0 +1,306 @@
+{
+  "metricas_completas": [
+    {
+      "Modelo": "RandomForest",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.68245,
+      "F1_Macro": 0.6802867403567052,
+      "Precision_Macro": 0.6787253343332162,
+      "Recall_Macro": 0.68245,
+      "Precision_Weighted": 0.6787253343332161,
+      "Recall_Weighted": 0.68245
+    },
+    {
+      "Modelo": "RandomForest",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.62962,
+      "F1_Macro": 0.6154713030914902,
+      "Precision_Macro": 0.61222637061423,
+      "Recall_Macro": 0.62962,
+      "Precision_Weighted": 0.61222637061423,
+      "Recall_Weighted": 0.62962
+    },
+    {
+      "Modelo": "RandomForest",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.74421,
+      "F1_Macro": 0.7329670678512078,
+      "Precision_Macro": 0.7264209899665858,
+      "Recall_Macro": 0.74421,
+      "Precision_Weighted": 0.7264209899665858,
+      "Recall_Weighted": 0.74421
+    },
+    {
+      "Modelo": "RandomForest",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.67757,
+      "F1_Macro": 0.6663774107037084,
+      "Precision_Macro": 0.662359759280944,
+      "Recall_Macro": 0.67757,
+      "Precision_Weighted": 0.6623597592809441,
+      "Recall_Weighted": 0.67757
+    },
+    {
+      "Modelo": "DecisionTree",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.686395,
+      "F1_Macro": 0.6841646381439193,
+      "Precision_Macro": 0.6827808853264419,
+      "Recall_Macro": 0.686395,
+      "Precision_Weighted": 0.6827808853264418,
+      "Recall_Weighted": 0.686395
+    },
+    {
+      "Modelo": "DecisionTree",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.64005,
+      "F1_Macro": 0.6211640257396807,
+      "Precision_Macro": 0.6301828166069045,
+      "Recall_Macro": 0.64005,
+      "Precision_Weighted": 0.6301828166069045,
+      "Recall_Weighted": 0.64005
+    },
+    {
+      "Modelo": "DecisionTree",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.750725,
+      "F1_Macro": 0.7377277334988867,
+      "Precision_Macro": 0.7351568157675651,
+      "Recall_Macro": 0.7507249999999999,
+      "Precision_Weighted": 0.735156815767565,
+      "Recall_Weighted": 0.750725
+    },
+    {
+      "Modelo": "DecisionTree",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.68897,
+      "F1_Macro": 0.6740424180214735,
+      "Precision_Macro": 0.6786149297257694,
+      "Recall_Macro": 0.68897,
+      "Precision_Weighted": 0.6786149297257693,
+      "Recall_Weighted": 0.68897
+    },
+    {
+      "Modelo": "LogisticRegression",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.701405,
+      "F1_Macro": 0.699157707795241,
+      "Precision_Macro": 0.6975931041505925,
+      "Recall_Macro": 0.701405,
+      "Precision_Weighted": 0.6975931041505925,
+      "Recall_Weighted": 0.701405
+    },
+    {
+      "Modelo": "LogisticRegression",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.546635,
+      "F1_Macro": 0.533538336695716,
+      "Precision_Macro": 0.5271643003054545,
+      "Recall_Macro": 0.546635,
+      "Precision_Weighted": 0.5271643003054546,
+      "Recall_Weighted": 0.546635
+    },
+    {
+      "Modelo": "LogisticRegression",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.670605,
+      "F1_Macro": 0.6562784961843702,
+      "Precision_Macro": 0.6488792305442947,
+      "Recall_Macro": 0.670605,
+      "Precision_Weighted": 0.6488792305442947,
+      "Recall_Weighted": 0.670605
+    },
+    {
+      "Modelo": "LogisticRegression",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.64771,
+      "F1_Macro": 0.6405654346902416,
+      "Precision_Macro": 0.6350457642460845,
+      "Recall_Macro": 0.64771,
+      "Precision_Weighted": 0.6350457642460845,
+      "Recall_Weighted": 0.64771
+    },
+    {
+      "Modelo": "SVM_lineal",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.7077,
+      "F1_Macro": 0.7062107038614875,
+      "Precision_Macro": 0.7048536989784371,
+      "Recall_Macro": 0.7079276700027555,
+      "Precision_Weighted": 0.704641178275924,
+      "Recall_Weighted": 0.7077
+    },
+    {
+      "Modelo": "SVM_lineal",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.5581,
+      "F1_Macro": 0.5409882239830145,
+      "Precision_Macro": 0.5389483204394689,
+      "Recall_Macro": 0.5585919094640737,
+      "Precision_Weighted": 0.5385452514024145,
+      "Recall_Weighted": 0.5581
+    },
+    {
+      "Modelo": "SVM_lineal",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.6818,
+      "F1_Macro": 0.6686869832483573,
+      "Precision_Macro": 0.6619723514102991,
+      "Recall_Macro": 0.6831351239121741,
+      "Precision_Weighted": 0.660781496619393,
+      "Recall_Weighted": 0.6818
+    },
+    {
+      "Modelo": "SVM_lineal",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.6406,
+      "F1_Macro": 0.6338590640014309,
+      "Precision_Macro": 0.6281667710150517,
+      "Recall_Macro": 0.6410202588695657,
+      "Precision_Weighted": 0.6278184206070667,
+      "Recall_Weighted": 0.6406
+    },
+    {
+      "Modelo": "SVM_poly_d2",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.7089,
+      "F1_Macro": 0.7077490938208477,
+      "Precision_Macro": 0.708224214678022,
+      "Recall_Macro": 0.7091418979004429,
+      "Precision_Weighted": 0.7079180179749965,
+      "Recall_Weighted": 0.7089
+    },
+    {
+      "Modelo": "SVM_poly_d2",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.6457,
+      "F1_Macro": 0.6196861829532885,
+      "Precision_Macro": 0.6332158822105208,
+      "Recall_Macro": 0.6464673824944428,
+      "Precision_Weighted": 0.6330038519370033,
+      "Recall_Weighted": 0.6457
+    },
+    {
+      "Modelo": "SVM_poly_d2",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.7593,
+      "F1_Macro": 0.7477419355226574,
+      "Precision_Macro": 0.748775694160007,
+      "Recall_Macro": 0.7608129640219243,
+      "Precision_Weighted": 0.7477278827695903,
+      "Recall_Weighted": 0.7593
+    },
+    {
+      "Modelo": "SVM_poly_d2",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.6976,
+      "F1_Macro": 0.6860113591702344,
+      "Precision_Macro": 0.6910736237099581,
+      "Recall_Macro": 0.6978771783155862,
+      "Precision_Weighted": 0.6907305543609712,
+      "Recall_Weighted": 0.6976
+    },
+    {
+      "Modelo": "SVM_poly_d3",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.7046,
+      "F1_Macro": 0.7036641488416631,
+      "Precision_Macro": 0.7030759775538764,
+      "Recall_Macro": 0.7047763080661918,
+      "Precision_Weighted": 0.7027556605941796,
+      "Recall_Weighted": 0.7046
+    },
+    {
+      "Modelo": "SVM_poly_d3",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.6501,
+      "F1_Macro": 0.6268075718310124,
+      "Precision_Macro": 0.6380137014934115,
+      "Recall_Macro": 0.6508813603615089,
+      "Precision_Weighted": 0.6378093666557485,
+      "Recall_Weighted": 0.6501
+    },
+    {
+      "Modelo": "SVM_poly_d3",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.7562,
+      "F1_Macro": 0.7478005978907691,
+      "Precision_Macro": 0.7424852883581601,
+      "Recall_Macro": 0.7575606370242095,
+      "Precision_Weighted": 0.7413036483849396,
+      "Recall_Weighted": 0.7562
+    },
+    {
+      "Modelo": "SVM_poly_d3",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.6947,
+      "F1_Macro": 0.6819587906617333,
+      "Precision_Macro": 0.6915996001763951,
+      "Recall_Macro": 0.6949948249884085,
+      "Precision_Weighted": 0.6912618463317807,
+      "Recall_Weighted": 0.6947
+    },
+    {
+      "Modelo": "SVM_radial",
+      "Tarea": "genero_libro_rec",
+      "Accuracy": 0.7082,
+      "F1_Macro": 0.7065348399654594,
+      "Precision_Macro": 0.7055067755344183,
+      "Recall_Macro": 0.708430455480981,
+      "Precision_Weighted": 0.7052349045337067,
+      "Recall_Weighted": 0.7082
+    },
+    {
+      "Modelo": "SVM_radial",
+      "Tarea": "tipo_vino_rec",
+      "Accuracy": 0.6538,
+      "F1_Macro": 0.6327035957975446,
+      "Precision_Macro": 0.641894171144057,
+      "Recall_Macro": 0.6545481150703889,
+      "Precision_Weighted": 0.6416909486804859,
+      "Recall_Weighted": 0.6538
+    },
+    {
+      "Modelo": "SVM_radial",
+      "Tarea": "genero_musical_rec",
+      "Accuracy": 0.7562,
+      "F1_Macro": 0.7456759622258872,
+      "Precision_Macro": 0.7402768036904249,
+      "Recall_Macro": 0.7576283547392773,
+      "Precision_Weighted": 0.7391417185234481,
+      "Recall_Weighted": 0.7562
+    },
+    {
+      "Modelo": "SVM_radial",
+      "Tarea": "genero_serie_rec",
+      "Accuracy": 0.6968,
+      "F1_Macro": 0.6822236379283491,
+      "Precision_Macro": 0.6880902294835853,
+      "Recall_Macro": 0.6971351124127507,
+      "Precision_Weighted": 0.6877756331612547,
+      "Recall_Weighted": 0.6968
+    }
+  ],
+  "resumen_por_modelo": {
+    "Accuracy": {
+      "SVM_radial": 0.70375,
+      "SVM_poly_d2": 0.702875,
+      "SVM_poly_d3": 0.7014,
+      "DecisionTree": 0.691535,
+      "RandomForest": 0.6834625,
+      "SVM_lineal": 0.64705,
+      "LogisticRegression": 0.6415887499999999
+    },
+    "F1_Macro": {
+      "SVM_radial": 0.6917845089793101,
+      "SVM_poly_d2": 0.690297142866757,
+      "SVM_poly_d3": 0.6900577773062945,
+      "DecisionTree": 0.67927470385099,
+      "RandomForest": 0.6737756305007779,
+      "SVM_lineal": 0.6374362437735726,
+      "LogisticRegression": 0.6323849938413922
+    }
+  },
+  "mejor_modelo": "SVM_radial",
+  "mejor_accuracy_promedio": 0.70375
+}

@@ -1,0 +1,68 @@
+{
+  "filas": 1000000,
+  "columnas": 11,
+  "numericas": [
+    "edad",
+    "engagement_promedio",
+    "valence_musical_pref",
+    "energia_musical_pref"
+  ],
+  "categoricas": [
+    "hora_lectura_preferida",
+    "velocidad_lectura",
+    "contenido_visual_pref",
+    "genero_libro_rec",
+    "tipo_vino_rec",
+    "genero_musical_rec",
+    "genero_serie_rec"
+  ],
+  "targets": [
+    "genero_libro_rec",
+    "tipo_vino_rec",
+    "genero_musical_rec",
+    "genero_serie_rec"
+  ],
+  "valores_faltantes_total": 0,
+  "estadisticas_descriptivas": {
+    "edad": {
+      "count": 1000000.0,
+      "mean": 30.360587,
+      "std": 8.848593126199853,
+      "min": 18.0,
+      "25%": 24.0,
+      "50%": 29.0,
+      "75%": 36.0,
+      "max": 65.0
+    },
+    "engagement_promedio": {
+      "count": 1000000.0,
+      "mean": 0.7616823100000002,
+      "std": 0.137149329356736,
+      "min": 0.08,
+      "25%": 0.67,
+      "50%": 0.77,
+      "75%": 0.86,
+      "max": 1.0
+    },
+    "valence_musical_pref": {
+      "count": 1000000.0,
+      "mean": 0.5598651500000001,
+      "std": 0.17202923039278417,
+      "min": 0.0,
+      "25%": 0.44,
+      "50%": 0.55,
+      "75%": 0.68,
+      "max": 1.0
+    },
+    "energia_musical_pref": {
+      "count": 1000000.0,
+      "mean": 0.55997634,
+      "std": 0.16660781913934833,
+      "min": 0.0,
+      "25%": 0.44,
+      "50%": 0.56,
+      "75%": 0.68,
+      "max": 1.0
+    }
+  }
+}
